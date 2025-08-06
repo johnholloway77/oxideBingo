@@ -11,11 +11,21 @@ import java.io.IOException;
 
 public class CardGenerator {
 
+  static TileFetcher tileFetcher;
+
+  static {
+    try {
+      tileFetcher = new TileFetcher();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static BufferedImage generateImage() {
     Color oxideGreen = Color.decode("#48d597");
-    TileFetcher tileFetcher = new TileFetcher();
 
     try {
+
       BufferedImage background = ImageLoader.loadImage();
       Font font = FontFetcher.fetchFont().deriveFont(Font.PLAIN, 50);
 
