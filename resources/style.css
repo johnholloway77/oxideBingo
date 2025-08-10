@@ -22,7 +22,7 @@ body {
   width: 90vw;                 /* 90% of viewport width */
   max-width: 800px;            /* never bigger than desktop size */
   aspect-ratio: 8 / 12.14;     /* keeps proportion based on original 800×1214 */
-  background: url("./card-background.webp") center/cover no-repeat;
+  background: url("./card-background-SH-Edition.webp") center/cover no-repeat;
   display: grid;
   place-items: center;
   margin: auto;                /* center on small screens */
