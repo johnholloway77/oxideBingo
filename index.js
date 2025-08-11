@@ -3,8 +3,8 @@ import {
   fillBoard,
   loadTiles,
   shuffleTiles
-} from "./gamelogic.js";
-import {addImageCopy, addImageDownload, getSVG} from "./ui.js";
+} from "./resources/gamelogic.js";
+import {addImageCopy, addImageDownload, getSVG} from "./resources/ui.js";
 
 const tiles = shuffleTiles(await loadTiles());
 fillBoard(tiles);
