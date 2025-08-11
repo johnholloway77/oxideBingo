@@ -23,7 +23,7 @@ export function addEventHandlers(svg) {
     if (index === 12) {
       return;
     }
-    cell.addEventListener('click', event => {
+    cell.addEventListener('click', () => {
       toggleCheck(cell, svg, index);
     })
   });
