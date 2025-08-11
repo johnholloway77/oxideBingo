@@ -1,3 +1,63 @@
+let htmlToImage;
+
+export function addImageCopy(buttonId, targetId) {
+  document.getElementById(buttonId).addEventListener('click', async () => {
+    if (!htmlToImage) {
+      htmlToImage = await import('https://unpkg.com/html-to-image@1.11.11/es/index.js');
+    }
+    const target = document.getElementById(targetId);
+    if (!target) {
+      console.error("No target");
+      return;
+    }
+
+    const blob = await htmlToImage.toBlob(target, {
+      pixelRatio: 2,
+      cacheBust: true,
+      backgroundColor: '#000000',
+    });
+    if (!blob) {
+      throw new Error('Renderer did not produce binary blob');
+    }
+
+    await navigator.clipboard.write([
+      new ClipboardItem({'image/png': blob})
+    ]);
+    console.log("Card copied to clipboard");
+  });
+}
+
+export function addImageDownload(buttonId, targetId) {
+  document.getElementById(buttonId).addEventListener('click', async () => {
+
+    if (!htmlToImage) {
+      htmlToImage = await import('https://unpkg.com/html-to-image@1.11.11/es/index.js');
+    }
+    const target = document.getElementById(targetId);
+    if (!target) {
+      console.error("No target");
+      return;
+    }
+
+    try {
+      const dataUrl = await htmlToImage.toJpeg(target, {
+        quality: 0.95,
+        pixelRatio: 2,
+        cacheBust: true,
+        backgroundColor: '#000000',
+      });
+
+      const downloadLink = document.createElement('a');
+      downloadLink.download = "bingo-card.jpeg";
+      downloadLink.href = dataUrl;
+      downloadLink.click();
+    } catch (err) {
+      console.error('Failed to generate image file:', err);
+    }
+
+  });
+}
+
 export function dropConfetti() {
   const colors = ['#ff0', '#f0f', '#0ff', '#0f0', '#00f', '#f00'];
   const numPieces = 50;

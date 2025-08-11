@@ -9,6 +9,35 @@ body {
   align-items: center;
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1em;
+}
+
+button {
+  font-family: sans-serif;
+  color: #ffffff;
+  background-color: #000000;
+  border: 2px solid #48d597;
+  border-radius: 8px; /* rounded corners */
+  padding: 0.75em 1.5em; /* responsive spacing */
+  text-align: center;
+  font-size: 1rem; /* adjusts with media queries */
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: inline-block;
+}
+
+button:hover {
+  background-color: #111111; /* subtle hover darkening */
+}
+
+button:active {
+  transform: scale(0.98); /* small click effect */
+}
 
 .description {
   text-align: center;
@@ -112,6 +141,10 @@ body {
 
 
 @media (max-width: 500px) {
+  button {
+    font-size: 0.9rem; /* slightly smaller on mobile */
+    padding: 0.6em 1.2em;
+  }
   .outer {
     width: 100vw;
     height: auto;
