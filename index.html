@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="text/x-icon" href="./oxide-check.svg">
+  <link rel="stylesheet" href="./resources/style.css">
+  <link rel="preload" as="image" href="./resources/card-background.webp">
+<!--  <link rel="preload" href="./resources/tiles.json" as="fetch">-->
+  <script type="module" src="./index.js" defer></script>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A silly page that generates bingo cards for Oxide and Friends">
+  <meta name="author" content="John Holloway">
+  <title>Oxide Bingo!!!</title>
+</head>
+<body>
+<div class="outer" id="outerCard">
+  <div class="inner">
+    <!-- 25 cells -->
+    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+  </div>
+</div>
+
+<div class="button-container">
+  <button id="download">Download Card &#x2913;</button>
+  <button id="copy">Copy to Clipboard &#x1F5D0;</button>
+</div>
+<div class="refresh-container">
+  <button id="generateNewCard">Generate New Card &#10227;</button>
+</div>
+
+<div class="description">
+  <p><strong>OxideBingo</strong> is a silly thing made for a laugh.</p>
+  <p>Card generated will be stored locally for three hours. Use the above button to generate a new bingo card</p>
+  <p>This is not made by <a href="https://oxide.computer">Oxide Computers</a> and does not reflect
+    the views of the company.</p>
+  <p>Come on, you know they're going to mention DTrace so it's free...</p>
+</div>
+
+</body>
+</html>

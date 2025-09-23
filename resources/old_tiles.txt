@@ -1,0 +1,18 @@
+
+  "Host gets called a boomer",
+
+  "Eating something weird / gross",
+
+  "AI love",
+  "C# programming language",
+  "Illumos zones",
+  "Docker",
+  "C++ Hate",
+  "C programming language",
+  "crates",
+  "nodeJS",
+  "Guest is interviewed",
+  "nerdy office story",
+  "weird executive story",
+  "Weird road trip story",
+  "Weird colleague story",
