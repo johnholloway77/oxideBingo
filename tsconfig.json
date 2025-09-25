@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "lib": ["ES2020", "DOM"],
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
@@ -13,6 +16,12 @@
     "checkJs": false,
     "resolveJsonModule": true
   },
-  "include": [ "resources", "vite.config", "env.d.ts"],
-  "exclude": ["dist"]
+  "include": [
+    "resources",
+    "vite.config",
+    "env.d.ts"
+  ],
+  "exclude": [
+    "dist"
+  ]
 }

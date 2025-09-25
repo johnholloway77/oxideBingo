@@ -1,35 +1,44 @@
 type HtmlToImage = {
   toBlob: (
       node: HTMLElement,
-      options?: {pixelRatio?: number; cacheBust?: boolean; backgroundColor?:string}
+      options?: { pixelRatio?: number; cacheBust?: boolean; backgroundColor?: string }
   ) => Promise<Blob | null>;
-  toJpeg:(
+  toJpeg: (
       node: HTMLElement,
-      options?: {quality?: number; pixelRatio?: number; cacheBust?: boolean; backgroundColor?:string}
+      options?: {
+        quality?: number;
+        pixelRatio?: number;
+        cacheBust?: boolean;
+        backgroundColor?: string
+      }
   ) => Promise<string>;
 };
 
 let htmlToImage: HtmlToImage | null = null;
 
-export function addGenerateNewCard(buttonId :string) :void{
-  const btn :HTMLElement | null  = document.getElementById(buttonId);
+export function addGenerateNewCard(buttonId: string): void {
+  const btn: HTMLElement | null = document.getElementById(buttonId);
 
-  if(!btn){return;}
-  btn.addEventListener('click', () :void =>{
+  if (!btn) {
+    return;
+  }
+  btn.addEventListener('click', (): void => {
     localStorage.clear();
     window.location.reload();
   })
 }
 
-export function addImageCopy(buttonId :string, targetId :string) :void {
-  const btn :HTMLElement | null  = document.getElementById(buttonId);
+export function addImageCopy(buttonId: string, targetId: string): void {
+  const btn: HTMLElement | null = document.getElementById(buttonId);
 
-  if(!btn){return;}
-  btn.addEventListener('click', async ():Promise<void> => {
+  if (!btn) {
+    return;
+  }
+  btn.addEventListener('click', async (): Promise<void> => {
     if (!htmlToImage) {
       htmlToImage = await import('https://unpkg.com/html-to-image@1.11.11/es/index.js');
     }
-    const target :HTMLElement|null = document.getElementById(targetId);
+    const target: HTMLElement | null = document.getElementById(targetId);
     if (!target) {
       console.error("No target");
       return;
@@ -51,11 +60,13 @@ export function addImageCopy(buttonId :string, targetId :string) :void {
   });
 }
 
-export function addImageDownload(buttonId :string, targetId :string) :void {
-  const btn :HTMLElement | null  = document.getElementById(buttonId);
+export function addImageDownload(buttonId: string, targetId: string): void {
+  const btn: HTMLElement | null = document.getElementById(buttonId);
 
-  if(!btn){return;}
-  btn.addEventListener('click', async () :Promise<void> => {
+  if (!btn) {
+    return;
+  }
+  btn.addEventListener('click', async (): Promise<void> => {
 
     if (!htmlToImage) {
       const mod = await import('https://unpkg.com/html-to-image@1.11.11/es/index.js');
@@ -68,14 +79,14 @@ export function addImageDownload(buttonId :string, targetId :string) :void {
     }
 
     try {
-      const dataUrl:string = await htmlToImage.toJpeg(target, {
+      const dataUrl: string = await htmlToImage.toJpeg(target, {
         quality: 0.95,
         pixelRatio: 2,
         cacheBust: true,
         backgroundColor: '#000000',
       });
 
-      const downloadLink :HTMLAnchorElement = document.createElement('a');
+      const downloadLink: HTMLAnchorElement = document.createElement('a');
       downloadLink.download = "bingo-card.jpeg";
       downloadLink.href = dataUrl;
       downloadLink.click();
@@ -86,25 +97,25 @@ export function addImageDownload(buttonId :string, targetId :string) :void {
   });
 }
 
-export function dropConfetti() :void {
-  const colors :string[] = ['#ff0', '#f0f', '#0ff', '#0f0', '#00f', '#f00'];
+export function dropConfetti(): void {
+  const colors: string[] = ['#ff0', '#f0f', '#0ff', '#0f0', '#00f', '#f00'];
   const numPieces = 50;
 
   for (let i: number = 0; i < numPieces; i++) {
-    const conf :HTMLDivElement = document.createElement('div');
+    const conf: HTMLDivElement = document.createElement('div');
     conf.classList.add('confetti');
-    const idx :number = Math.floor(
+    const idx: number = Math.floor(
         Math.random() * colors.length);
     conf.style.backgroundColor = colors[idx] ?? '#000';
     conf.style.left = Math.random() * 100 + 'vw';
     conf.style.animationDuration = (Math.random() * 2 + 2) + 's';
     document.body.appendChild(conf);
 
-    setTimeout(() :void => conf.remove(), 4000);
+    setTimeout((): void => conf.remove(), 4000);
   }
 }
 
-export async function getSVG() : Promise<string> {
+export async function getSVG(): Promise<string> {
   const svgRes = await fetch('./oxide-check.svg');
   if (!svgRes.ok) {
     throw new Error('Failed to get svg');
@@ -112,13 +123,13 @@ export async function getSVG() : Promise<string> {
   return await svgRes.text();
 }
 
-function escapeHtml(s :string):string {
-  const t:HTMLDivElement = document.createElement( 'div');
+function escapeHtml(s: string): string {
+  const t: HTMLDivElement = document.createElement('div');
   t.textContent = s;
   return t.innerHTML;
 }
 
-export function winStreak(message = "BINGO!") :void {
+export function winStreak(message = "BINGO!"): void {
   if (document.getElementById("win-streak-overlay")) {
     return;
   }
@@ -163,6 +174,6 @@ export function winStreak(message = "BINGO!") :void {
   overlay.innerHTML = `<div class="win-streak">${escapeHtml(message)}</div>`;
   document.body.appendChild(overlay);
 
-  overlay.addEventListener("animationend", () :void => overlay.remove(),
+  overlay.addEventListener("animationend", (): void => overlay.remove(),
       {once: true});
 }
