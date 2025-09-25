@@ -1,4 +1,7 @@
-html, body { height: 100%; margin: 0; }
+html, body {
+  height: 100%;
+  margin: 0;
+}
 
 body {
   background-color: #242930;
@@ -56,13 +59,13 @@ button:active {
 }
 
 .outer {
-  width: 90vw;                 /* 90% of viewport width */
-  max-width: 800px;            /* never bigger than desktop size */
-  aspect-ratio: 8 / 12.14;     /* keeps proportion based on original 800×1214 */
+  width: 90vw; /* 90% of viewport width */
+  max-width: 800px; /* never bigger than desktop size */
+  aspect-ratio: 8 / 12.14; /* keeps proportion based on original 800×1214 */
   background: url("./card-background.webp") center/cover no-repeat;
   display: grid;
   place-items: center;
-  margin: auto;                /* center on small screens */
+  margin: auto; /* center on small screens */
   border: #48d597;
   border-style: solid;
   border-radius: 25px;
@@ -76,7 +79,7 @@ button:active {
   width: calc(100% - 8.92%);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 0.8vw;                  /* scales with viewport */
+  gap: 0.8vw; /* scales with viewport */
   box-sizing: border-box;
 }
 
@@ -100,7 +103,7 @@ button:active {
 
 .cell {
   aspect-ratio: 1 / 1;
-  border: 1px solid rgba(0,0,0,0.25);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   display: grid;
   place-items: center;
   text-align: center;
@@ -109,9 +112,10 @@ button:active {
   min-height: 40px;
   padding: 0.2em;
 
-  position: relative;      /* <-- key */
-  overflow: hidden;        /* clip overlay edges */
+  position: relative; /* <-- key */
+  overflow: hidden; /* clip overlay edges */
 }
+
 .cell.checked {
 }
 
@@ -143,9 +147,8 @@ button:active {
   width: 50%;
   height: auto;
   stroke: #48d597;
-  filter: drop-shadow(10px 10px 5px rgba(0,0,0,1));
+  filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 1));
 }
-
 
 
 @media (max-width: 500px) {
@@ -153,11 +156,13 @@ button:active {
     font-size: 0.9rem; /* slightly smaller on mobile */
     padding: 0.6em 1.2em;
   }
+
   .outer {
     width: 100vw;
     height: auto;
     aspect-ratio: 8 / 12.14;
   }
+
   .inner {
     margin-top: calc(22.63% + 11%);
     margin-left: 6.72%;
@@ -167,15 +172,17 @@ button:active {
 
     gap: 1vw;
   }
+
   .cell {
     font-size: clamp(2vw, 2.25vw, 12px);
     aspect-ratio: 1 / 1;
-    border: 1px solid rgba(0,0,0,0.25);
+    border: 1px solid rgba(0, 0, 0, 0.25);
     display: grid;
     place-items: center;
     text-align: center;
     padding: 0.2em;
   }
+
   .cell.checked {
     content: "";
     background-image: url('./oxide-check.svg');
@@ -189,24 +196,22 @@ button:active {
 
 @keyframes glow {
   from {
-    text-shadow:
-        0 0 20px #fff,
-        0 0 30px #122322,
-        0 0 40px #122322,
-        0 0 50px #122322,
-        0 0 60px #122322,
-        0 0 70px #122322,
-        0 0 80px #122322;
+    text-shadow: 0 0 20px #fff,
+    0 0 30px #122322,
+    0 0 40px #122322,
+    0 0 50px #122322,
+    0 0 60px #122322,
+    0 0 70px #122322,
+    0 0 80px #122322;
   }
   to {
 
-    text-shadow:
-        0 0 10px #fff,
-        0 0 20px #fff,
-        0 0 30px #48d597,
-        0 0 40px #48d597,
-        0 0 50px #48d597,
-        0 0 60px #48d597,
-        0 0 70px #48d597;
+    text-shadow: 0 0 10px #fff,
+    0 0 20px #fff,
+    0 0 30px #48d597,
+    0 0 40px #48d597,
+    0 0 50px #48d597,
+    0 0 60px #48d597,
+    0 0 70px #48d597;
   }
 }
