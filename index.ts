@@ -19,7 +19,7 @@ if (oxideBingoTime && oxideBingoTiles) {
   newGame();
 }
 
-const svg = await getSVG();
+const svg : string = await getSVG();
 addEventHandlers(svg);
 addImageDownload("download", "outerCard");
 addImageCopy("copy", "outerCard");
