@@ -1,15 +1,18 @@
 import {
   newGame,
   checkTimestamp,
-} from "./resources/gamelogic";
+} from "./src/gamelogic";
 import {
   addGenerateNewCard,
   addImageCopy,
   addImageDownload,
-} from "./resources/ui";
+} from "./src/ui";
+import {init} from "./src/effects";
 
 const oxideBingoTiles: string | null = localStorage.getItem("oxideBingoTiles");
 const oxideBingoTime: string | null = localStorage.getItem("oxideBingoTime");
+
+init();
 
 if (oxideBingoTime && oxideBingoTiles) {
   checkTimestamp(oxideBingoTime);

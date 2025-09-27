@@ -17,7 +17,7 @@
     "resolveJsonModule": true
   },
   "include": [
-    "resources",
+    "src",
     "vite.config",
     "env.d.ts"
   ],

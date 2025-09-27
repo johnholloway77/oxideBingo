@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="text/x-icon" href="./oxide-check.svg">
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./effects.css">
+
   <link rel="preload" as="image" href="./card-background.webp">
-<!--  <link rel="preload" href="./resources/tiles.json" as="fetch">-->
   <script type="module" src="index.ts" defer></script>
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,6 +16,19 @@
   <title>Oxide Bingo!!!</title>
 </head>
 <body>
+
+<div class="wrapBox">
+  <div class="hud">
+    <button class="btn" id="explodeBtn">Explode</button>
+    <button class="btn" id="regenBtn">Rebuild Grid</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<br/>
+<br>
+<br>
+<br>
 <div class="outer" id="outerCard">
   <div class="inner">
     <!-- 25 cells -->
