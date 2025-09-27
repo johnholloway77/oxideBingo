@@ -1,8 +1,8 @@
 :root{
   --cols: 5;
   --rows: 5;
-  --explode-time: 800ms;
-  --rain-time: 8000ms;
+  --explode-time: 2000ms;
+  --rain-time: 800ms;
   --ease-time: cubic-bezier(0.2, 0.8, 0.2, 1);
   --oxide-green: #48d597;
   --background-color: #242930;
@@ -26,7 +26,7 @@
   width: 90vw;
   max-width: 800px;
   aspect-ratio: var(--background-card-ratio);
-  background: var(--background-card) center/cover no-repeat;
+  /*background: var(--background-card) center/cover no-repeat;*/
   display: grid;
   grid-template-columns: repeat(var(--cols), 1fr);
   grid-template-rows: repeat(var(--rows), 1fr);
@@ -37,7 +37,7 @@
 }
 
 /*AKA bingocell*/
-.ascii-cell {
+.ascii-card {
   width: 100%;
   background: linear-gradient(180deg, #1a2235, #141d2c);
   box-shadow: 0 8px rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
@@ -49,14 +49,14 @@
   border-style: dashed;
 }
 
-.ascii-cell.top-row{
+.ascii-card.top-row{
   border-top-style: none;
 }
-.ascii-cell.bottom-row{
+.ascii-card.bottom-row{
   border-bottom-style: none;
 }
 
-.ascii-cell::after{
+.ascii-card::after{
   content: "";
   position: absolute;;
   inset: 10% auto auto 10%;
@@ -70,10 +70,10 @@
   filter: blur(0.5px);
 }
 
-.exploding .ascii-cell {
+.exploding .ascii-card {
   filter: brightness(0.92) saturate(0.96);
 }
 
-.raining .ascii-cell{
-  transition: transform var(--rain-time) var(--ease-time, opacity var(--rain-time) var(--ease-time));
+.raining .ascii-card{
+  transition: transform var(--rain-time) var(--ease-time) opacity var(--rain-time) var(--ease-time);
 }

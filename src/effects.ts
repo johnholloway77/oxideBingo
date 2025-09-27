@@ -1,7 +1,7 @@
 const gridElement: HTMLElement | null = document.getElementById("grid");
 const explodeBtn: HTMLElement | null = document.getElementById("explodeBtn");
 const regenBtn: HTMLElement | null = document.getElementById("regenBtn");
-const wrapBox: HTMLCollectionOf<Element> = document.getElementsByClassName("wrapBox");
+const wrapBox: HTMLElement = document.getElementsByClassName("wrapBox")[0] as HTMLElement || null;
 
 const TOTAL_CELLS: number = 25;
 const STAGGER: number = 100;
@@ -20,7 +20,7 @@ type Rank = {
 function buildGrid(): void {
 
   gridElement!.innerHTML = "";
-  document.body.classList.remove("exlpoding", "raining");
+  document.body.classList.remove("exploding", "raining");
 
   for (let i: number = 0; i < TOTAL_CELLS; i++) {
     const bingoCell: HTMLDivElement = document.createElement("div");
@@ -37,7 +37,9 @@ function buildGrid(): void {
     asciiBorder.appendChild(cellContent);
     gridElement?.appendChild(bingoCell);
   }
-  requestAnimationFrame((): Promise<void> => rainIn())
+  requestAnimationFrame((): void => {
+    void rainIn();
+  })
 }
 
 function translateToNearestEdge(fromX: number, fromY: number, dirX: number, dirY: number, vw: number, vh: number) {
@@ -53,6 +55,9 @@ function translateToNearestEdge(fromX: number, fromY: number, dirX: number, dirY
   const transY2: number = (vh - fromY) / dy;
 
   const transOverZero: number[] = [transX1, transX2, transY1, transY2].filter((t: number): boolean => t > 0);
+  if (transOverZero.length === 0) {
+    return 0;
+  }
   const smallestTrans = Math.min(...transOverZero);
   return smallestTrans * 1.1;
 }
@@ -100,7 +105,7 @@ async function explode(): Promise<void> {
     const eY: number = r.top + r.height / 2;
 
     const vectorX: number = eX - screenCenterX;
-    const vectorY: number = eX - screenCenterY;
+    const vectorY: number = eY - screenCenterY;
     const length: number = Math.hypot(vectorX, vectorY) || 1;
     const uX: number = vectorX / length;
     const uY: number = vectorY / length;
@@ -112,13 +117,13 @@ async function explode(): Promise<void> {
 
     ring.element.style.transitionDelay = `${Math.round(ring.delay! * STAGGER)}ms`;
     ring.element.style.transform = `translate3d(${uX * nearestEdge}px, ${
-        uY * nearestEdge}}px, ${z}px, rotate(${rotation}deg)`;
+        uY * nearestEdge}px, ${z}px) rotate(${rotation}deg)`;
     ring.element.style.opacity = "0";
   });
 
-  const longest: number = parseFloat(
+  const longest: number = parseTime(
       getComputedStyle(document.documentElement).getPropertyValue(
-          "--explode-duration"
+          "--explode-time"
       )
   ) || 800;
   const maxDelay: number = Math.max(...rings.map((ring: Ring): number => ring.delay!)) * STAGGER;
@@ -134,6 +139,8 @@ async function rainIn(): Promise<void> {
   const cells: Element[] = Array.from(gridElement!.children);
   if (!cells.length) return;
 
+  document.body.classList.add("raining");
+
   const rect: DOMRect = gridElement!.getBoundingClientRect();
 
   cells.forEach((el: Element, index: number): void => {
@@ -143,7 +150,7 @@ async function rainIn(): Promise<void> {
     const hEl: HTMLElement = el as HTMLElement;
     hEl.style.transition = "none";
     hEl.style.transform = `translate3d(0, ${-distanceAbove}px, 0) rotate(${
-        Math.random() * 8 - 4}deg`;
+        Math.random() * 8 - 4}deg)`;
     hEl.style.opacity = "0";
   });
 
@@ -169,15 +176,15 @@ async function rainIn(): Promise<void> {
 
   const rainDur: number = parseTime(
       getComputedStyle(document.documentElement).getPropertyValue(
-          "--rain-duration"
+          "--rain-time"
       )
   ) || 700;
   await wait( rainDur + 240);
   document.body.classList.remove("raining");
 }
 
-function wait(ms: number): Promise<unknown> {
-  return new Promise((res):number => setTimeout(res, ms));
+function wait(ms: number): Promise<void> {
+  return new Promise((res)=> setTimeout(res, ms));
 }
 
 function parseTime(value: string): number {
