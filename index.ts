@@ -15,9 +15,9 @@ const oxideBingoTime: string | null = localStorage.getItem("oxideBingoTime");
 init();
 
 if (oxideBingoTime && oxideBingoTiles) {
-  checkTimestamp(oxideBingoTime);
+  void checkTimestamp(oxideBingoTime);
 } else {
-  newGame();
+  void newGame();
 }
 
 

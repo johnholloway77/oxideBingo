@@ -9,6 +9,8 @@ import {dropConfetti, winStreak, getSVG} from "./ui";
 // }
 // checkedTiles[12] = true;
 
+
+
 let WINNINGCOMBOS: number[][] = [
   [0, 1, 2, 3, 4],
   [5, 6, 7, 8, 9],
@@ -49,6 +51,12 @@ export function checkForBingo(checkedTiles: boolean[]): boolean {
 
 export function fillBoard(tiles: string[]): void {
   const cells: NodeListOf<Element> = document.querySelectorAll(".cell");
+  const contents: NodeListOf<Element> = document.querySelectorAll<Element>(".content");
+
+  console.log(contents)
+
+
+
   let tileIndex = 0;
   let tilesAssigned: string[] = [];
 
@@ -61,6 +69,20 @@ export function fillBoard(tiles: string[]): void {
     if (tile !== undefined) {
       cell.innerHTML = `<p>${tile.toUpperCase()}</p>`;
       tilesAssigned.push(tile);
+      tileIndex++;
+    }
+  });
+
+  tileIndex = 0;
+  contents.forEach((cell, index) => {
+    if (index === 12){
+      return;
+    }
+
+    console.log("tile");
+    const tile: string | undefined = tiles[tileIndex];
+    if(tile !== undefined){
+      cell.innerHTML = `<p>${tile.toUpperCase()}</p>`;
       tileIndex++;
     }
   });
@@ -172,7 +194,7 @@ async function reloadTiles(svg: string): Promise<void> {
 
   } else {
 
-    await newGame();
+   void await newGame();
   }
 }
 

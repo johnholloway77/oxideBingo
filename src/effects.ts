@@ -1,7 +1,8 @@
+import {fillBoard} from "./gamelogic";
+
 const gridElement: HTMLElement | null = document.getElementById("grid");
 const explodeBtn: HTMLElement | null = document.getElementById("explodeBtn");
 const regenBtn: HTMLElement | null = document.getElementById("regenBtn");
-const wrapBox: HTMLElement = document.getElementsByClassName("wrapBox")[0] as HTMLElement || null;
 
 const TOTAL_CELLS: number = 25;
 const STAGGER: number = 100;
@@ -139,12 +140,17 @@ async function rainIn(): Promise<void> {
   const cells: Element[] = Array.from(gridElement!.children);
   if (!cells.length) return;
 
+  let oxideBingoTiles: string | null = localStorage.getItem("oxideBingoTiles");
+
+  if (oxideBingoTiles !== null) {
+    const tiles = JSON.parse(oxideBingoTiles);
+    fillBoard(tiles);
+  }
+
   document.body.classList.add("raining");
 
-  const rect: DOMRect = gridElement!.getBoundingClientRect();
 
-  cells.forEach((el: Element, index: number): void => {
-    const r: DOMRect = el.getBoundingClientRect();
+  cells.forEach((el: Element): void => {
     const distanceAbove =
         Math.random() * (window.innerHeight * 0.7) + window.innerHeight * 0.3;
     const hEl: HTMLElement = el as HTMLElement;
