@@ -3,14 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="text/x-icon" href="./oxide-check.svg">
-
-  <!-- Resource hints for better performance -->
-  <link rel="preconnect" href="https://unpkg.com">
-  <link rel="dns-prefetch" href="https://unpkg.com">
-  <link rel="preload" as="image" href="./card-background.webp">
-  <link rel="preload" as="font" type="font/woff2" href="./BlexMonoNerdFontPropo-Bold.woff2" crossorigin>
-
   <link rel="stylesheet" href="./style.css">
+<!--  <link rel="preload" href="./resources/tiles.json" as="fetch">-->
   <script type="module" src="index.ts" defer></script>
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,8 +15,7 @@
 </head>
 <body>
 <div class="outer" id="outerCard">
-  <div class="inner" role="grid" aria-label="Bingo card - 5 by 5 grid">
-    <!-- 25 cells - ARIA attributes and tabindex added via JavaScript -->
+  <div class="inner">
     <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
     <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
     <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
@@ -44,7 +37,6 @@
   <p>Card generated will be stored locally for three hours. Use the above button to generate a new bingo card</p>
   <p>This is not made by <a href="https://oxide.computer">Oxide Computers</a> and does not reflect
     the views of the company.</p>
-  <p>Come on, you know they're going to mention DTrace so it's free...</p>
 </div>
 
 </body>
