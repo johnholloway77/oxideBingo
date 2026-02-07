@@ -1,3 +1,14 @@
+/* CSS Custom Properties for easier theming */
+:root {
+  --bg-primary: #242930;
+  --bg-secondary: #1a1d23;
+  --text-primary: #afbac4;
+  --text-secondary: #7a8896;
+  --accent-primary: #48d597;
+  --accent-hover: #5ee5a8;
+  --border-subtle: rgba(175, 186, 196, 0.1);
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -5,18 +16,25 @@ html, body {
 
 @font-face {
   font-family: "BlexMono Nerd Font Propo";
-  src: url("BlexMonoNerdFontPropo-Bold.ttf") format("truetype");
+  src: url("BlexMonoNerdFontPropo-Bold.woff2") format("woff2");
   font-weight: bold;
   font-style: normal;
+  font-display: swap; /* Prevent flash of invisible text */
+  unicode-range: U+0020-007F; /* Only basic Latin characters */
 }
 
 body {
-  background-color: #242930;
+  /* Subtle gradient background */
+  background: linear-gradient(180deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 100%
+  );
   font-family: "BlexMono Nerd Font Propo", monospace;
   margin: 0;
   padding: 0;
-  color: #afbac4;
+  color: var(--text-primary);
   align-items: center;
+  min-height: 100vh;
 }
 
 .button-container {
@@ -35,47 +53,93 @@ body {
   margin-top: 1em;
 }
 
+/* Improved button styles (Oxide-inspired) */
 button {
-  font-family: sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.025em;
   color: #ffffff;
   background-color: #000000;
-  border: 2px solid #48d597;
-  border-radius: 8px; /* rounded corners */
-  padding: 0.75em 1.5em; /* responsive spacing */
+  border: 1px solid var(--accent-primary);
+  border-radius: 8px;
+  padding: 0.75em 1.5em;
   text-align: center;
-  font-size: 1rem; /* adjusts with media queries */
+  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.15s ease;
   display: inline-block;
 }
 
-button:hover {
-  background-color: #111111; /* subtle hover darkening */
+button:hover:not(:disabled) {
+  background-color: rgba(72, 213, 151, 0.1);
+  border-color: var(--accent-hover);
+  box-shadow: 0 2px 8px rgba(72, 213, 151, 0.2);
 }
 
-button:active {
-  transform: scale(0.98); /* small click effect */
+button:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Better typography hierarchy */
 .description {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
   text-align: center;
   margin: 2rem auto;
   max-width: 600px;
   padding: 0 1rem;
-  color: #afbac4;
+  color: var(--text-primary);
+  opacity: 0.9;
 }
 
+.description strong {
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.description a {
+  color: var(--accent-hover);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(94, 229, 168, 0.3);
+  transition: border-color 0.2s ease;
+}
+
+.description a:hover {
+  border-bottom-color: var(--accent-hover);
+}
+
+/* Card entrance animation */
 .outer {
-  width: 90vw; /* 90% of viewport width */
-  max-width: 800px; /* never bigger than desktop size */
-  aspect-ratio: 8 / 12.14; /* keeps proportion based on original 800×1214 */
+  width: 90vw;
+  max-width: 800px;
+  aspect-ratio: 8 / 12.14;
   background: url("./card-background.webp") center/cover no-repeat;
   display: grid;
   place-items: center;
-  margin: auto; /* center on small screens */
-  border: #48d597;
+  margin: auto;
+  border: var(--accent-primary);
   border-style: solid;
   border-radius: 25px;
+  animation: cardFadeIn 0.6s ease-out;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .inner {
@@ -86,26 +150,9 @@ button:active {
   width: calc(100% - 8.92%);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 0.8vw; /* scales with viewport */
+  gap: 0.8vw;
   box-sizing: border-box;
-}
-
-.confetti {
-  position: fixed;
-  top: 0;
-  width: 10px;
-  height: 10px;
-  background-color: red;
-  opacity: 0.8;
-  animation: fall linear forwards;
-  z-index: 9999;
-}
-
-@keyframes fall {
-  to {
-    transform: translateY(100vh) rotate(720deg);
-    opacity: 0.9;
-  }
+  /* ARIA grid role */
 }
 
 .cell {
@@ -118,9 +165,9 @@ button:active {
   min-width: 40px;
   min-height: 40px;
   padding: 0.2em;
-
-  position: relative; /* <-- key */
-  overflow: hidden; /* clip overlay edges */
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
 }
 
 .cell.checked {
@@ -133,8 +180,36 @@ button:active {
   hyphens: auto;
 }
 
+/* Original radiating glow effect */
 .cell:hover {
   animation: glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 20px #fff,
+    0 0 30px #122322,
+    0 0 40px #122322,
+    0 0 50px #122322,
+    0 0 60px #122322,
+    0 0 70px #122322,
+    0 0 80px #122322;
+  }
+  to {
+    text-shadow: 0 0 10px #fff,
+    0 0 20px #fff,
+    0 0 30px #48d597,
+    0 0 40px #48d597,
+    0 0 50px #48d597,
+    0 0 60px #48d597,
+    0 0 70px #48d597;
+  }
+}
+
+/* Focus indicator for keyboard navigation */
+.cell:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }
 
 .overlay {
@@ -150,17 +225,77 @@ button:active {
   pointer-events: none;
 }
 
+/* Animated checkmark appearance */
 .overlay svg {
   width: 50%;
   height: auto;
-  stroke: #48d597;
+  stroke: var(--accent-primary);
   filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 1));
+  animation: checkAppear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
+@keyframes checkAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-12deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(3deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
 
+/* Toast notification styles */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(72, 213, 151, 0.95);
+  color: #000;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-family: system-ui, sans-serif;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Loading state shimmer effect */
+.cell.loading {
+  background: linear-gradient(
+    90deg,
+    rgba(175, 186, 196, 0.1) 25%,
+    rgba(175, 186, 196, 0.2) 50%,
+    rgba(175, 186, 196, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Mobile responsiveness */
 @media (max-width: 500px) {
   button {
-    font-size: 0.9rem; /* slightly smaller on mobile */
+    font-size: 0.9rem;
     padding: 0.6em 1.2em;
   }
 
@@ -176,7 +311,6 @@ button:active {
     margin-right: 2.2%;
     height: calc(100% - 22.63%);
     width: calc(100% - 8.92%);
-
     gap: 1vw;
   }
 
@@ -189,36 +323,15 @@ button:active {
     text-align: center;
     padding: 0.2em;
   }
-
-  .cell.checked {
-    content: "";
-    background-image: url('./oxide-check.svg');
-    background-size: 50%;
-    background-repeat: no-repeat;
-    background-position: center;
-
-  }
 }
 
-
-@keyframes glow {
-  from {
-    text-shadow: 0 0 20px #fff,
-    0 0 30px #122322,
-    0 0 40px #122322,
-    0 0 50px #122322,
-    0 0 60px #122322,
-    0 0 70px #122322,
-    0 0 80px #122322;
-  }
-  to {
-
-    text-shadow: 0 0 10px #fff,
-    0 0 20px #fff,
-    0 0 30px #48d597,
-    0 0 40px #48d597,
-    0 0 50px #48d597,
-    0 0 60px #48d597,
-    0 0 70px #48d597;
+/* Accessibility: Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

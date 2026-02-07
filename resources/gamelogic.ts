@@ -1,13 +1,14 @@
 import {dropConfetti, winStreak, getSVG} from "./ui";
 
-// let oxideBingoChecked: string | null = localStorage.getItem("oxideBingoChecked");
-// let checkedTiles :boolean[];
-// if (oxideBingoChecked) {
-//   checkedTiles = JSON.parse(oxideBingoChecked);
-// } else {
-//   checkedTiles = Array(25).fill(false);
-// }
-// checkedTiles[12] = true;
+// Debounced localStorage saves
+let saveTimeout: number | undefined;
+
+function debouncedSave(key: string, value: any): void {
+  clearTimeout(saveTimeout);
+  saveTimeout = window.setTimeout(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, 100);
+}
 
 let WINNINGCOMBOS: number[][] = [
   [0, 1, 2, 3, 4],
@@ -24,14 +25,52 @@ let WINNINGCOMBOS: number[][] = [
   [4, 8, 12, 16, 20],
 ];
 
+// Event delegation - one listener instead of 25!
 export function addEventHandlers(svg: string, checkedTiles: boolean[]): void {
-  document.querySelectorAll(".cell").forEach((cell: Element, index: number): void => {
-    if (index === 12) {
-      return;
+  const inner = document.querySelector('.inner');
+
+  // Click handler with event delegation
+  inner?.addEventListener('click', (e) => {
+    const cell = (e.target as Element).closest('.cell');
+    if (!cell) return;
+
+    const index = Array.from(cell.parentElement!.children).indexOf(cell);
+    if (index === 12) return; // Free space
+
+    toggleCheck(cell, svg, index, checkedTiles);
+  });
+
+  // Keyboard navigation
+  inner?.addEventListener('keydown', (e) => {
+    const cell = e.target as HTMLElement;
+    if (!cell.classList.contains('cell')) return;
+
+    const index = Array.from(cell.parentElement!.children).indexOf(cell);
+
+    // Space or Enter = toggle
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      if (index !== 12) {
+        toggleCheck(cell, svg, index, checkedTiles);
+      }
     }
-    cell.addEventListener("click", () => {
-      toggleCheck(cell, svg, index, checkedTiles);
-    });
+
+    // Arrow keys = navigate
+    if (e.key.startsWith('Arrow')) {
+      e.preventDefault();
+      let newIndex = index;
+
+      if (e.key === 'ArrowRight') newIndex++;
+      if (e.key === 'ArrowLeft') newIndex--;
+      if (e.key === 'ArrowDown') newIndex += 5;
+      if (e.key === 'ArrowUp') newIndex -= 5;
+
+      // Keep within bounds
+      if (newIndex >= 0 && newIndex < 25) {
+        const newCell = cell.parentElement!.children[newIndex] as HTMLElement;
+        newCell.focus();
+      }
+    }
   });
 }
 
@@ -53,13 +92,24 @@ export function fillBoard(tiles: string[]): void {
   let tilesAssigned: string[] = [];
 
   cells.forEach((cell, index) => {
+    const htmlCell = cell as HTMLElement;
+
+    // Make cells keyboard accessible
+    htmlCell.setAttribute('role', 'gridcell');
+    htmlCell.setAttribute('tabindex', '0');
+
     if (index === 12) {
+      // Center cell is the free space
+      htmlCell.setAttribute('aria-label', 'Free space - center tile');
+      htmlCell.setAttribute('aria-pressed', 'true');
       return;
     }
 
     const tile: string | undefined = tiles[tileIndex];
     if (tile !== undefined) {
       cell.innerHTML = `<p>${tile.toUpperCase()}</p>`;
+      htmlCell.setAttribute('aria-label', tile);
+      htmlCell.setAttribute('aria-pressed', 'false');
       tilesAssigned.push(tile);
       tileIndex++;
     }
@@ -88,19 +138,24 @@ export function shuffleTiles(array: string[]): string[] {
 
 function toggleCheck(cell: Element, svg: string, index: number, checkedTiles: boolean[]): boolean[] {
   const overlay = cell.querySelector(".overlay");
+  const htmlCell = cell as HTMLElement;
+
   if (overlay) {
-    overlay.remove(); // remove the node
+    overlay.remove();
     cell.classList.remove("checked");
-    index === 12 ? (checkedTiles[index] = true) : (checkedTiles[index] = false);
+    checkedTiles[index] = false;
+    htmlCell.setAttribute('aria-pressed', 'false');
   } else {
     const overlay = document.createElement("div");
     overlay.className = "overlay";
     overlay.innerHTML = svg;
     cell.appendChild(overlay);
     cell.classList.add("checked");
-    index === 12 ? (checkedTiles[index] = true) : (checkedTiles[index] = true);
+    checkedTiles[index] = true;
+    htmlCell.setAttribute('aria-pressed', 'true');
   }
 
+  // Use debounced save
   saveChecked(checkedTiles);
 
   if (checkForBingo(checkedTiles)) {
@@ -117,11 +172,14 @@ function saveTiles(tiles: string[]): void {
 }
 
 function saveChecked(checkedTiles: boolean[]): void {
-  localStorage.setItem("oxideBingoChecked", JSON.stringify(checkedTiles));
+  // Use debounced save to avoid blocking on rapid clicks
+  debouncedSave("oxideBingoChecked", checkedTiles);
 }
 
 function setChecked(svg: string, checkedTiles: boolean[]): void {
   document.querySelectorAll(".cell").forEach((cell, index) => {
+    const htmlCell = cell as HTMLElement;
+
     if (index === 12) {
       return;
     }
@@ -132,6 +190,7 @@ function setChecked(svg: string, checkedTiles: boolean[]): void {
       overlay.innerHTML = svg;
       cell.appendChild(overlay);
       cell.classList.add("checked");
+      htmlCell.setAttribute('aria-pressed', 'true');
     }
   });
 
@@ -141,7 +200,7 @@ function setChecked(svg: string, checkedTiles: boolean[]): void {
 export async function checkTimestamp(oxideBingoTime: string): Promise<void> {
   const currentTime: number = Date.now();
   const timeDifference: number = currentTime - Number.parseFloat(oxideBingoTime);
-  const svg: string = await getSVG();
+  const svg: string = getSVG(); // Now synchronous!
 
   if (timeDifference < 10800000) {
     console.log("Game state saved within three hours");
@@ -178,7 +237,7 @@ async function reloadTiles(svg: string): Promise<void> {
 
 export async function newGame(): Promise<void> {
   localStorage.clear();
-  const svg: string = await getSVG();
+  const svg: string = getSVG(); // Now synchronous!
   const loadedTiles = await loadTiles();
 
   if (loadedTiles !== null) {

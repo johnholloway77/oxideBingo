@@ -3,9 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="text/x-icon" href="./oxide-check.svg">
-  <link rel="stylesheet" href="./style.css">
+
+  <!-- Resource hints for better performance -->
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="dns-prefetch" href="https://unpkg.com">
   <link rel="preload" as="image" href="./card-background.webp">
-<!--  <link rel="preload" href="./resources/tiles.json" as="fetch">-->
+  <link rel="preload" as="font" type="font/woff2" href="./BlexMonoNerdFontPropo-Bold.woff2" crossorigin>
+
+  <link rel="stylesheet" href="./style.css">
   <script type="module" src="index.ts" defer></script>
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,8 +21,8 @@
 </head>
 <body>
 <div class="outer" id="outerCard">
-  <div class="inner">
-    <!-- 25 cells -->
+  <div class="inner" role="grid" aria-label="Bingo card - 5 by 5 grid">
+    <!-- 25 cells - ARIA attributes and tabindex added via JavaScript -->
     <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
     <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
     <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
