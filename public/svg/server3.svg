@@ -1,0 +1,189 @@
+<!-- Tall vertical rack: assembled bottom -> top (stepped).
+     Fixes:
+     - half-width sleds are ONLY in the top half and do not overlap
+     - bottom units include PSU + Storage + Storage (as requested)
+     - half-width sleds align as 2-up within the same full-width bay width
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="900" viewBox="0 0 260 900" role="img" aria-label="ASCII rack assembling bottom to top with storage and PSU bays and half-width sleds">
+  <defs>
+    <style>
+      text { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","DejaVu Sans Mono", monospace; font-size:16px; }
+      .dim{fill:#26ff7a; opacity:0.12;}
+      .dimmer{fill:#26ff7a; opacity:0.08;}
+      .tick{fill:#26ff7a; opacity:0.10;}
+      .label{fill:#b8bbbc; opacity:0.20; font-size:14px;}
+      .rail1{stroke:rgba(38,255,122,0.16); stroke-width:2; fill:none}
+      .rail2{stroke:rgba(15,184,90,0.14); stroke-width:1.5; fill:none}
+
+      @keyframes pop {
+      0%   { opacity: 0; transform: translateY(10px); }
+      15%  { opacity: 1; transform: translateY(0px); }
+      100% { opacity: 1; transform: translateY(0px); }
+      }
+      @keyframes railIn { 0%{opacity:0} 20%{opacity:1} 100%{opacity:1} }
+
+      .rail { animation: railIn 7.2s steps(1,end) infinite; }
+
+      /* bottom -> top stagger (one cycle) */
+      .b0  { animation: pop 7.2s steps(1,end) infinite; animation-delay: 0.2s; } /* PSU */
+      .b1  { animation: pop 7.2s steps(1,end) infinite; animation-delay: 0.6s; } /* STORAGE (bottom) */
+      .b2  { animation: pop 7.2s steps(1,end) infinite; animation-delay: 1.0s; } /* STORAGE (upper) */
+
+      .c1  { animation: pop 7.2s steps(1,end) infinite; animation-delay: 1.4s; } /* compute sled 01 */
+      .c2  { animation: pop 7.2s steps(1,end) infinite; animation-delay: 1.8s; } /* compute sled 02 */
+      .c3  { animation: pop 7.2s steps(1,end) infinite; animation-delay: 2.2s; } /* compute sled 03 */
+      .c4  { animation: pop 7.2s steps(1,end) infinite; animation-delay: 2.6s; } /* compute sled 04 */
+
+      .chan{ animation: pop 7.2s steps(1,end) infinite; animation-delay: 3.0s; } /* cable channel */
+
+      .h1  { animation: pop 7.2s steps(1,end) infinite; animation-delay: 3.4s; } /* half-sled row A */
+      .h2  { animation: pop 7.2s steps(1,end) infinite; animation-delay: 3.8s; } /* half-sled row B */
+
+      .top1{ animation: pop 7.2s steps(1,end) infinite; animation-delay: 4.2s; } /* SIDE CAR */
+      .top2{ animation: pop 7.2s steps(1,end) infinite; animation-delay: 4.6s; } /* NETWORK */
+      .cap { animation: pop 7.2s steps(1,end) infinite; animation-delay: 5.0s; } /* labels/cap */
+
+      @keyframes blinkOnce { 0%,70%{opacity:0} 75%,85%{opacity:.18} 100%{opacity:0} }
+      .status { animation: blinkOnce 7.2s steps(1,end) infinite; animation-delay: 5.0s; }
+    </style>
+
+    <clipPath id="clipRack">
+      <rect x="22" y="18" width="216" height="864" rx="10"/>
+    </clipPath>
+  </defs>
+
+  <!-- Rails -->
+  <g class="rail">
+    <rect x="22" y="18" width="216" height="864" rx="10" class="rail1"/>
+    <rect x="30" y="26" width="200" height="848" rx="8" class="rail2"/>
+  </g>
+
+  <!-- ticks -->
+  <g class="tick">
+    <rect x="18" y="44" width="10" height="2"/><rect x="18" y="68" width="10" height="2"/><rect x="18" y="92" width="10" height="2"/>
+    <rect x="18" y="116" width="10" height="2"/><rect x="18" y="140" width="10" height="2"/><rect x="18" y="164" width="10" height="2"/>
+    <rect x="18" y="188" width="10" height="2"/><rect x="18" y="212" width="10" height="2"/><rect x="18" y="236" width="10" height="2"/>
+    <rect x="18" y="260" width="10" height="2"/><rect x="18" y="284" width="10" height="2"/><rect x="18" y="308" width="10" height="2"/>
+    <rect x="18" y="332" width="10" height="2"/><rect x="18" y="356" width="10" height="2"/><rect x="18" y="380" width="10" height="2"/>
+    <rect x="18" y="404" width="10" height="2"/><rect x="18" y="428" width="10" height="2"/><rect x="18" y="452" width="10" height="2"/>
+    <rect x="18" y="476" width="10" height="2"/><rect x="18" y="500" width="10" height="2"/><rect x="18" y="524" width="10" height="2"/>
+    <rect x="18" y="548" width="10" height="2"/><rect x="18" y="572" width="10" height="2"/><rect x="18" y="596" width="10" height="2"/>
+    <rect x="18" y="620" width="10" height="2"/><rect x="18" y="644" width="10" height="2"/><rect x="18" y="668" width="10" height="2"/>
+    <rect x="18" y="692" width="10" height="2"/><rect x="18" y="716" width="10" height="2"/><rect x="18" y="740" width="10" height="2"/>
+    <rect x="18" y="764" width="10" height="2"/><rect x="18" y="788" width="10" height="2"/><rect x="18" y="812" width="10" height="2"/>
+    <rect x="18" y="836" width="10" height="2"/><rect x="18" y="860" width="10" height="2"/>
+  </g>
+
+  <!-- Everything inside rack -->
+  <g clip-path="url(#clipRack)">
+    <!-- ===== BOTTOM: PSU + STORAGE + STORAGE (no overlap) ===== -->
+    <g class="b0 dim">
+      <text x="46" y="848">┌────────────────────┐</text>
+      <text x="46" y="872">│       PSU / PWR     │</text>
+      <text x="46" y="896">└────────────────────┘</text>
+    </g>
+
+    <g class="b1 dim">
+      <text x="46" y="792">┌────────────────────┐</text>
+      <text x="46" y="816">│   STORAGE  (ARCH)   │</text>
+      <text x="46" y="840">└────────────────────┘</text>
+    </g>
+
+    <g class="b2 dim">
+      <text x="46" y="736">┌────────────────────┐</text>
+      <text x="46" y="760">│   STORAGE  (SSD)    │</text>
+      <text x="46" y="784">└────────────────────┘</text>
+    </g>
+
+    <!-- ===== LOWER/MID: full-width compute sleds ===== -->
+    <g class="c1 dim">
+      <text x="46" y="680">┌────────────────────┐</text>
+      <text x="46" y="704">│  [SLED 01]   OK     │</text>
+      <text x="46" y="728">└────────────────────┘</text>
+    </g>
+
+    <g class="c2 dim">
+      <text x="46" y="624">┌────────────────────┐</text>
+      <text x="46" y="648">│  [SLED 02]   OK     │</text>
+      <text x="46" y="672">└────────────────────┘</text>
+    </g>
+
+    <g class="c3 dim">
+      <text x="46" y="568">┌────────────────────┐</text>
+      <text x="46" y="592">│  [SLED 03]  WARN    │</text>
+      <text x="46" y="616">└────────────────────┘</text>
+    </g>
+
+    <g class="c4 dim">
+      <text x="46" y="512">┌────────────────────┐</text>
+      <text x="46" y="536">│  [SLED 04]   OK     │</text>
+      <text x="46" y="560">└────────────────────┘</text>
+    </g>
+
+    <!-- Cable channel (between compute + upper bays) -->
+    <g class="chan dimmer">
+      <text x="58" y="450">││││││││││││││││││││││</text>
+      <text x="58" y="474">││││││││││││││││││││││</text>
+      <text x="58" y="498">││││││││││││││││││││││</text>
+    </g>
+
+    <!-- ===== TOP HALF: half-width sleds (2-up), aligned and not overlapping ===== -->
+    <!-- Half-width box is 10 chars wide: "┌────────┐" (8 dashes). Two boxes + 2-char gap fits a 22-char bay. -->
+    <!-- Left X = 46, Right X = 160 (approx. 12 chars over). -->
+    <g class="h1 dim">
+      <!-- Row A (y 356..428) -->
+      <text x="46"  y="360">┌────────┐</text>
+      <text x="46"  y="384">│SLED 05 │</text>
+      <text x="46"  y="408">│  OK    │</text>
+      <text x="46"  y="432">└────────┘</text>
+
+      <text x="160" y="360">┌────────┐</text>
+      <text x="160" y="384">│SLED 06 │</text>
+      <text x="160" y="408">│  OK    │</text>
+      <text x="160" y="432">└────────┘</text>
+    </g>
+
+    <g class="h2 dim">
+      <!-- Row B (y 276..348) -->
+      <text x="46"  y="280">┌────────┐</text>
+      <text x="46"  y="304">│SLED 07 │</text>
+      <text x="46"  y="328">│  OK    │</text>
+      <text x="46"  y="352">└────────┘</text>
+
+      <text x="160" y="280">┌────────┐</text>
+      <text x="160" y="304">│SLED 08 │</text>
+      <text x="160" y="328">│ WARN   │</text>
+      <text x="160" y="352">└────────┘</text>
+    </g>
+
+    <!-- ===== VERY TOP: sidecar/network bays ===== -->
+    <g class="top1 dim">
+      <text x="46" y="224">┌────────────────────┐</text>
+      <text x="46" y="248">│ [SIDE CAR]   OK     │</text>
+      <text x="46" y="272">└────────────────────┘</text>
+    </g>
+
+    <g class="top2 dim">
+      <text x="46" y="168">┌────────────────────┐</text>
+      <text x="46" y="192">│ [NETWORK]    OK     │</text>
+      <text x="46" y="216">└────────────────────┘</text>
+    </g>
+
+    <!-- Cap / labels -->
+    <g class="cap">
+      <text x="44" y="58" class="label">RACK-01</text>
+      <text x="176" y="58" class="label">SILO=prod</text>
+      <text x="46" y="96" class="dimmer">┌────────────────────┐</text>
+      <text x="46" y="120" class="dimmer">│   assembled stack   │</text>
+      <text x="46" y="144" class="dimmer">└────────────────────┘</text>
+    </g>
+
+    <!-- Status light blink after assembly -->
+    <g class="status">
+      <circle cx="224" cy="72" r="4" fill="#26ff7a"/>
+      <circle cx="224" cy="72" r="10" fill="rgba(38,255,122,0.10)"/>
+    </g>
+  </g>
+
+  <text x="44" y="892" class="label">console://build</text>
+</svg>

@@ -1,0 +1,146 @@
+<!-- Tall vertical rack: animated assembly from bottom -> top (stepped) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="900" viewBox="0 0 260 900" role="img" aria-label="ASCII rack assembling from bottom to top">
+  <defs>
+    <style>
+      text { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","DejaVu Sans Mono", monospace; font-size:16px; }
+      .dim{fill:#26ff7a; opacity:0.12;}
+      .dimmer{fill:#26ff7a; opacity:0.08;}
+      .tick{fill:#26ff7a; opacity:0.10;}
+      .label{fill:#b8bbbc; opacity:0.20; font-size:14px;}
+      .rail1{stroke:rgba(38,255,122,0.16); stroke-width:2; fill:none}
+      .rail2{stroke:rgba(15,184,90,0.14); stroke-width:1.5; fill:none}
+
+      /* Assembly: each module appears in steps, bottom -> top */
+      @keyframes pop {
+      0%   { opacity: 0; transform: translateY(10px); }
+      15%  { opacity: 1; transform: translateY(0px); }
+      100% { opacity: 1; transform: translateY(0px); }
+      }
+      @keyframes railIn {
+      0%   { opacity: 0; }
+      20%  { opacity: 1; }
+      100% { opacity: 1; }
+      }
+
+      /* stagger timings (single loop) */
+      .rail { animation: railIn 6.0s steps(1,end) infinite; }
+
+      .m1 { animation: pop 6.0s steps(1,end) infinite; animation-delay: 0.2s; } /* feet/base */
+      .m2 { animation: pop 6.0s steps(1,end) infinite; animation-delay: 0.6s; } /* bottom bay */
+      .m3 { animation: pop 6.0s steps(1,end) infinite; animation-delay: 1.0s; }
+      .m4 { animation: pop 6.0s steps(1,end) infinite; animation-delay: 1.4s; }
+      .m5 { animation: pop 6.0s steps(1,end) infinite; animation-delay: 1.8s; }
+      .m6 { animation: pop 6.0s steps(1,end) infinite; animation-delay: 2.2s; }
+      .m7 { animation: pop 6.0s steps(1,end) infinite; animation-delay: 2.6s; }
+      .m8 { animation: pop 6.0s steps(1,end) infinite; animation-delay: 3.0s; } /* top bay */
+      .m9 { animation: pop 6.0s steps(1,end) infinite; animation-delay: 3.4s; } /* cap/labels */
+
+      /* subtle status blink once assembled */
+      @keyframes blinkOnce {
+      0%,70% { opacity: 0; }
+      75%,85% { opacity: .18; }
+      100% { opacity: 0; }
+      }
+      .status { animation: blinkOnce 6.0s steps(1,end) infinite; animation-delay: 3.2s; }
+    </style>
+
+    <!-- Clip to keep everything inside the rack area -->
+    <clipPath id="clipRack">
+      <rect x="22" y="18" width="216" height="864" rx="10"/>
+    </clipPath>
+  </defs>
+
+  <!-- Rails appear first -->
+  <g class="rail">
+    <rect x="22" y="18" width="216" height="864" rx="10" class="rail1"/>
+    <rect x="30" y="26" width="200" height="848" rx="8"  class="rail2"/>
+  </g>
+
+  <!-- ticks (static, faint) -->
+  <g class="tick">
+    <rect x="18" y="44" width="10" height="2"/><rect x="18" y="68" width="10" height="2"/><rect x="18" y="92" width="10" height="2"/>
+    <rect x="18" y="116" width="10" height="2"/><rect x="18" y="140" width="10" height="2"/><rect x="18" y="164" width="10" height="2"/>
+    <rect x="18" y="188" width="10" height="2"/><rect x="18" y="212" width="10" height="2"/><rect x="18" y="236" width="10" height="2"/>
+    <rect x="18" y="260" width="10" height="2"/><rect x="18" y="284" width="10" height="2"/><rect x="18" y="308" width="10" height="2"/>
+    <rect x="18" y="332" width="10" height="2"/><rect x="18" y="356" width="10" height="2"/><rect x="18" y="380" width="10" height="2"/>
+    <rect x="18" y="404" width="10" height="2"/><rect x="18" y="428" width="10" height="2"/><rect x="18" y="452" width="10" height="2"/>
+    <rect x="18" y="476" width="10" height="2"/><rect x="18" y="500" width="10" height="2"/><rect x="18" y="524" width="10" height="2"/>
+    <rect x="18" y="548" width="10" height="2"/><rect x="18" y="572" width="10" height="2"/><rect x="18" y="596" width="10" height="2"/>
+    <rect x="18" y="620" width="10" height="2"/><rect x="18" y="644" width="10" height="2"/><rect x="18" y="668" width="10" height="2"/>
+    <rect x="18" y="692" width="10" height="2"/><rect x="18" y="716" width="10" height="2"/><rect x="18" y="740" width="10" height="2"/>
+    <rect x="18" y="764" width="10" height="2"/><rect x="18" y="788" width="10" height="2"/><rect x="18" y="812" width="10" height="2"/>
+    <rect x="18" y="836" width="10" height="2"/><rect x="18" y="860" width="10" height="2"/>
+  </g>
+
+  <!-- All modules clipped inside rack -->
+  <g clip-path="url(#clipRack)">
+    <!-- Base / feet -->
+    <g class="m1 dim">
+      <text x="46" y="848">┌────────────────────┐</text>
+      <text x="46" y="872">│      base / psu     │</text>
+      <text x="46" y="896">└────────────────────┘</text>
+    </g>
+
+    <!-- Bottom bay -->
+    <g class="m2 dim">
+      <text x="46" y="790">┌────────────────────┐</text>
+      <text x="46" y="814">│  [SLED 04]   OK     │</text>
+      <text x="46" y="838">└────────────────────┘</text>
+    </g>
+
+    <g class="m3 dim">
+      <text x="46" y="734">┌────────────────────┐</text>
+      <text x="46" y="758">│  [SLED 03]  WARN    │</text>
+      <text x="46" y="782">└────────────────────┘</text>
+    </g>
+
+    <g class="m4 dim">
+      <text x="46" y="678">┌────────────────────┐</text>
+      <text x="46" y="702">│  [SLED 02]   OK     │</text>
+      <text x="46" y="726">└────────────────────┘</text>
+    </g>
+
+    <g class="m5 dim">
+      <text x="46" y="622">┌────────────────────┐</text>
+      <text x="46" y="646">│  [SLED 01]   OK     │</text>
+      <text x="46" y="670">└────────────────────┘</text>
+    </g>
+
+    <!-- Cable channel / mid-frame -->
+    <g class="m6 dimmer">
+      <text x="58" y="560">││││││││││││││││││││││</text>
+      <text x="58" y="584">││││││││││││││││││││││</text>
+      <text x="58" y="608">││││││││││││││││││││││</text>
+    </g>
+
+    <!-- Upper bays -->
+    <g class="m7 dim">
+      <text x="46" y="496">┌────────────────────┐</text>
+      <text x="46" y="520">│ [SIDE CAR]  OK      │</text>
+      <text x="46" y="544">└────────────────────┘</text>
+    </g>
+
+    <g class="m8 dim">
+      <text x="46" y="440">┌────────────────────┐</text>
+      <text x="46" y="464">│ [NETWORK]   OK      │</text>
+      <text x="46" y="488">└────────────────────┘</text>
+    </g>
+
+    <!-- Cap / title -->
+    <g class="m9">
+      <text x="44" y="58" class="label">RACK-01</text>
+      <text x="176" y="58" class="label">SILO=prod</text>
+      <text x="46" y="96" class="dimmer">┌────────────────────┐</text>
+      <text x="46" y="120" class="dimmer">│   assembled stack   │</text>
+      <text x="46" y="144" class="dimmer">└────────────────────┘</text>
+    </g>
+
+    <!-- A tiny “status light” blink after assembly -->
+    <g class="status">
+      <circle cx="224" cy="72" r="4" fill="#26ff7a"/>
+      <circle cx="224" cy="72" r="10" fill="rgba(38,255,122,0.10)"/>
+    </g>
+  </g>
+
+  <text x="44" y="892" class="label">console://build</text>
+</svg>

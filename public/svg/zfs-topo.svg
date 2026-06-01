@@ -1,0 +1,127 @@
+
+  <!-- SIDE FLANK: Vertical ZFS topology (pool -> vdevs -> disks), subtle Oxide-ish watermark -->
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="900" viewBox="0 0 260 900" role="img" aria-label="Subtle ZFS topology diagram">
+  <defs>
+    <style>
+      .bg{fill:transparent}
+      text { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","DejaVu Sans Mono", monospace; font-size:13px; }
+      .rail1{stroke:rgba(38,255,122,0.12); stroke-width:2; fill:none}
+      .rail2{stroke:rgba(15,184,90,0.10); stroke-width:1.5; fill:none}
+      .node{fill:rgba(0,0,0,0); stroke:rgba(38,255,122,0.18); stroke-width:2}
+      .link{stroke:rgba(38,255,122,0.16); stroke-width:2; fill:none}
+      .link2{stroke:rgba(15,184,90,0.14); stroke-width:1.5; fill:none}
+      .label{fill:#b8bbbc; opacity:0.28}
+      .ok{fill:#26ff7a; opacity:0.20}
+      .warn{fill:#febc2e; opacity:0.20}
+      .bad{fill:#ff5f57; opacity:0.18}
+
+      .blink{fill:#26ff7a; opacity:0}
+      @keyframes bl { 0%,70%{opacity:0} 75%,85%{opacity:.35} 100%{opacity:0} }
+      .b1{animation:bl 3.0s steps(1,end) infinite}
+      .b2{animation:bl 3.6s steps(1,end) infinite}
+      .b3{animation:bl 2.8s steps(1,end) infinite}
+    </style>
+  </defs>
+
+  <!-- Faint outer rail (matches your terminal vibe) -->
+  <rect x="22" y="18" width="216" height="864" rx="10" class="rail1"/>
+  <rect x="30" y="26" width="200" height="848" rx="8" class="rail2"/>
+
+  <!-- Header -->
+  <text x="44" y="36" class="label">STORAGE</text>
+  <text x="176" y="36" class="label">SILO=prod</text>
+
+  <!-- ===== POOL NODE ===== -->
+  <rect x="54" y="70" width="152" height="44" rx="10" class="node"/>
+  <text x="68" y="98" class="label">pool: prod-ssd</text>
+  <circle cx="194" cy="92" r="4" class="ok"/>
+
+  <!-- Link down to vdevs -->
+  <path d="M130 114 L130 148" class="link"/>
+
+  <!-- ===== VDEVS (two mirrors) ===== -->
+  <rect x="34"  y="160" width="92" height="44" rx="10" class="node"/>
+  <rect x="134" y="160" width="92" height="44" rx="10" class="node"/>
+  <text x="44"  y="188" class="label">vdev: mir-0</text>
+  <text x="144" y="188" class="label">vdev: mir-1</text>
+  <circle cx="112" cy="182" r="4" class="ok"/>
+  <circle cx="212" cy="182" r="4" class="ok"/>
+
+  <!-- branch links -->
+  <path d="M130 148 L80 160" class="link2"/>
+  <path d="M130 148 L180 160" class="link2"/>
+
+  <!-- ===== DISKS under mir-0 ===== -->
+  <path d="M80 204 L80 232" class="link"/>
+  <rect x="34" y="240" width="92" height="40" rx="10" class="node"/>
+  <text x="44" y="265" class="label">nvme0n1</text>
+  <circle cx="112" cy="260" r="4" class="ok"/>
+
+  <path d="M80 280 L80 308" class="link2"/>
+  <rect x="34" y="316" width="92" height="40" rx="10" class="node"/>
+  <text x="44" y="341" class="label">nvme1n1</text>
+  <circle cx="112" cy="336" r="4" class="ok"/>
+
+  <!-- ===== DISKS under mir-1 ===== -->
+  <path d="M180 204 L180 232" class="link"/>
+  <rect x="134" y="240" width="92" height="40" rx="10" class="node"/>
+  <text x="144" y="265" class="label">nvme2n1</text>
+  <circle cx="212" cy="260" r="4" class="ok"/>
+
+  <path d="M180 280 L180 308" class="link2"/>
+  <rect x="134" y="316" width="92" height="40" rx="10" class="node"/>
+  <text x="144" y="341" class="label">nvme3n1</text>
+  <circle cx="212" cy="336" r="4" class="ok"/>
+
+  <!-- ===== Special vdev ===== -->
+  <path d="M130 148 L130 382" class="link"/>
+  <rect x="54" y="392" width="152" height="44" rx="10" class="node"/>
+  <text x="68" y="420" class="label">special: mir-sp</text>
+  <circle cx="194" cy="414" r="4" class="ok"/>
+
+  <path d="M130 436 L130 464" class="link2"/>
+
+  <rect x="34" y="472" width="92" height="40" rx="10" class="node"/>
+  <rect x="134" y="472" width="92" height="40" rx="10" class="node"/>
+  <text x="44"  y="497" class="label">nvme4n1</text>
+  <text x="144" y="497" class="label">nvme5n1</text>
+  <circle cx="112" cy="492" r="4" class="ok"/>
+  <circle cx="212" cy="492" r="4" class="ok"/>
+
+  <path d="M130 464 L80 472" class="link2"/>
+  <path d="M130 464 L180 472" class="link2"/>
+
+  <!-- ===== Secondary pool: archive (degraded) ===== -->
+  <path d="M130 512 L130 560" class="link"/>
+  <rect x="54" y="572" width="152" height="44" rx="10" class="node"/>
+  <text x="68" y="600" class="label">pool: archive</text>
+  <circle cx="194" cy="594" r="4" class="warn"/>
+
+  <path d="M130 616 L130 646" class="link2"/>
+
+  <!-- RAIDZ vdev -->
+  <rect x="46" y="656" width="168" height="44" rx="10" class="node"/>
+  <text x="60" y="684" class="label">vdev: raidz2-0</text>
+  <circle cx="202" cy="678" r="4" class="warn"/>
+
+  <!-- Disk row as little pills -->
+  <path d="M130 700 L130 724" class="link"/>
+  <!-- six disks -->
+  <rect x="34"  y="736" width="32" height="22" rx="8" class="node"/><text x="41" y="752" class="label" font-size="11px">da0</text>
+  <rect x="70"  y="736" width="32" height="22" rx="8" class="node"/><text x="77" y="752" class="label" font-size="11px">da1</text>
+  <rect x="106" y="736" width="32" height="22" rx="8" class="node"/><text x="113" y="752" class="label" font-size="11px">da2</text>
+  <rect x="142" y="736" width="32" height="22" rx="8" class="node"/><text x="149" y="752" class="label" font-size="11px">da3</text>
+  <rect x="178" y="736" width="32" height="22" rx="8" class="node"/><text x="185" y="752" class="label" font-size="11px">da4</text>
+  <rect x="214" y="736" width="32" height="22" rx="8" class="node"/><text x="221" y="752" class="label" font-size="11px">da5</text>
+
+  <!-- da3 marked "bad-ish" -->
+  <rect x="142" y="736" width="32" height="22" rx="8" fill="rgba(255,95,87,0.12)" stroke="rgba(255,95,87,0.22)" stroke-width="2"/>
+
+  <!-- Traffic/resilver dots -->
+  <circle cx="130" cy="540" r="4" class="blink b1"/>
+  <circle cx="80"  cy="300" r="4" class="blink b2"/>
+  <circle cx="180" cy="300" r="4" class="blink b3"/>
+
+  <!-- Footer -->
+  <text x="44" y="892" class="label">zfs://topology</text>
+</svg>

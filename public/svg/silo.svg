@@ -1,0 +1,102 @@
+<!-- STORAGE: unix double-green border + bottom prompt typing (slower) + prints a ZFS topology map + stepped scroll -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" role="img" aria-label="Unix-style terminal: ZFS pool/vdev/disk map printing with bottom typed command">
+  <defs>
+    <style>
+      text { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","DejaVu Sans Mono", monospace; font-size:16px; }
+      .bg{fill:#070b0a}
+      .fg{fill:#b8bbbc}.dim{fill:#5b5f61}
+      .green{fill:#26ff7a}.g2{fill:#0fb85a}
+      .ok{fill:#28c840}.warn{fill:#febc2e}.bad{fill:#ff5f57}
+      .cyan{fill:#6bdcff}.pink{fill:#fb6e88}
+
+      @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+      .cursor { animation: blink 1s step-end infinite; }
+
+      /* Timeline: 0..48 typing, then print+scroll */
+      @keyframes typeST { 0%{width:0px} 48%{width:620px} 100%{width:620px} }
+      .cmdReveal { animation: typeST 8.8s steps(38,end) infinite; }
+
+      @keyframes cursorST { 0%{transform:translateX(0px)} 47%{transform:translateX(620px)} 100%{transform:translateX(620px)} }
+      .cmdCursor { animation: cursorST 8.8s steps(1,end) infinite; }
+
+      @keyframes revealST { 0%{height:0px} 48%{height:0px} 78%{height:336px} 88%{height:336px} 100%{height:0px} }
+      .revealRect { animation: revealST 8.8s steps(14,end) infinite; }
+
+      @keyframes scrollST {
+      0%,48% { transform: translateY(0px); opacity: 1; }
+      78% { transform: translateY(0px); opacity: 1; }
+      80% { transform: translateY(-24px); }
+      81.5% { transform: translateY(-48px); }
+      83% { transform: translateY(-72px); }
+      84.5% { transform: translateY(-96px); }
+      86% { transform: translateY(-120px); }
+      87.5% { transform: translateY(-144px); }
+      89% { transform: translateY(-168px); }
+      90.5% { transform: translateY(-192px); }
+      92% { transform: translateY(-216px); }
+      93.5% { transform: translateY(-240px); }
+      96% { opacity: 1; }
+      97% { opacity: 0; }
+      100%{ transform: translateY(0px); opacity: 1; }
+      }
+      .printCycle { animation: scrollST 8.8s steps(1,end) infinite; }
+    </style>
+
+    <filter id="shadow"><feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="rgba(0,0,0,.45)"/></filter>
+
+    <clipPath id="viewport_st"><rect x="56" y="56" width="988" height="412"/></clipPath>
+    <clipPath id="out_st"><rect x="56" y="72" width="988" height="360"/></clipPath>
+
+    <mask id="mask_st" maskUnits="userSpaceOnUse">
+      <rect x="56" y="72" width="988" height="0" fill="white" class="revealRect"/>
+    </mask>
+
+    <mask id="cmdmask_st" maskUnits="userSpaceOnUse">
+      <rect x="128" y="456" width="0" height="22" fill="white" class="cmdReveal"/>
+    </mask>
+  </defs>
+
+  <!-- terminal -->
+  <rect x="32" y="32" width="1036" height="456" rx="12" class="bg" filter="url(#shadow)"/>
+  <rect x="40" y="40" width="1020" height="440" rx="10" fill="none" stroke="#26ff7a" stroke-width="3"/>
+  <rect x="48" y="48" width="1004" height="424" rx="8" fill="none" stroke="#0fb85a" stroke-width="2" opacity="0.9"/>
+
+  <g clip-path="url(#viewport_st)">
+    <!-- OUTPUT -->
+    <g clip-path="url(#out_st)">
+      <g mask="url(#mask_st)" class="printCycle">
+        <text x="56" y="96" class="dim">ZFS TOPOLOGY / SILO prod</text>
+        <text x="56" y="120" class="fg">scan: enumerating disks… building vdev graph…</text>
+        <text x="56" y="144" class="fg">┌──────────────────────────────────────────────────────────────────────┐</text>
+
+        <text x="56" y="168" class="fg">│ pool: </text><text x="136" y="168" class="cyan">prod-ssd</text><text x="220" y="168" class="fg">   state: </text><text x="316" y="168" class="ok">ONLINE</text><text x="380" y="168" class="fg">   ashift=12   autotrim=on      │</text>
+        <text x="56" y="192" class="fg">│   vdev: </text><text x="144" y="192" class="cyan">mirror-0</text><text x="244" y="192" class="fg">  </text><text x="280" y="192" class="ok">ONLINE</text><text x="344" y="192" class="fg">   </text><text x="380" y="192" class="fg">nvme0n1  nvme1n1               │</text>
+        <text x="56" y="216" class="fg">│   vdev: </text><text x="144" y="216" class="cyan">mirror-1</text><text x="244" y="216" class="fg">  </text><text x="280" y="216" class="ok">ONLINE</text><text x="344" y="216" class="fg">   </text><text x="380" y="216" class="fg">nvme2n1  nvme3n1               │</text>
+        <text x="56" y="240" class="fg">│   special: </text><text x="176" y="240" class="cyan">mirror-sp</text><text x="276" y="240" class="fg"> </text><text x="280" y="240" class="ok">ONLINE</text><text x="344" y="240" class="fg">   </text><text x="380" y="240" class="fg">nvme4n1  nvme5n1               │</text>
+
+        <text x="56" y="264" class="fg">│ pool: </text><text x="136" y="264" class="cyan">archive</text><text x="220" y="264" class="fg">    state: </text><text x="316" y="264" class="warn">DEGRADED</text><text x="412" y="264" class="fg">   resilver=62%             │</text>
+        <text x="56" y="288" class="fg">│   vdev: </text><text x="144" y="288" class="cyan">raidz2-0</text><text x="252" y="288" class="fg">  </text><text x="280" y="288" class="warn">DEGRADED</text><text x="412" y="288" class="fg">  da0 da1 da2 da3 da4 da5     │</text>
+        <text x="56" y="312" class="fg">│     </text><text x="112" y="312" class="fg">faulted:</text><text x="200" y="312" class="bad"> da3</text><text x="252" y="312" class="fg">  (replacing → da12)   spare: </text><text x="620" y="312" class="ok">INUSE</text><text x="692" y="312" class="fg"> │</text>
+
+        <text x="56" y="336" class="fg">│ pool: </text><text x="136" y="336" class="cyan">logs</text><text x="220" y="336" class="fg">       state: </text><text x="316" y="336" class="ok">ONLINE</text><text x="380" y="336" class="fg">   log vdev: mirror-log      │</text>
+        <text x="56" y="360" class="fg">│   vdev: </text><text x="144" y="360" class="cyan">mirror-log</text><text x="268" y="360" class="fg"> </text><text x="280" y="360" class="ok">ONLINE</text><text x="344" y="360" class="fg">   </text><text x="380" y="360" class="fg">nvme6n1  nvme7n1               │</text>
+
+        <text x="56" y="384" class="fg">│ datasets: prod/vols  prod/images  prod/backups   snapshots: 176        │</text>
+        <text x="56" y="408" class="fg">│ health: scrub weekly  last scrub: 2d ago  errors: 0  checksum: 0       │</text>
+        <text x="56" y="432" class="fg">└──────────────────────────────────────────────────────────────────────┘</text>
+
+        <text x="56" y="456" class="dim">hint: zpool status -v; zpool iostat -v 1; zfs list -o space</text>
+      </g>
+    </g>
+
+    <!-- PROMPT (bottom) -->
+    <text x="56" y="460" class="green">oxide%</text>
+    <text x="128" y="460" class="dim"> zfs map --silo=prod --watch</text>
+    <g mask="url(#cmdmask_st)">
+      <text x="128" y="460" class="fg"> zfs map --silo=prod --watch</text>
+    </g>
+    <g class="cmdCursor">
+      <text x="128" y="460" class="green cursor">█</text>
+    </g>
+  </g>
+</svg>

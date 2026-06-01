@@ -1,0 +1,116 @@
+<!-- NETWORKING: unix double-green border + bottom prompt typing (slower) + prints a "network map" + stepped scroll + tiny sparkline -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" role="img" aria-label="Unix-style terminal: networking map printing with bottom typed command">
+  <defs>
+    <style>
+      text { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","DejaVu Sans Mono", monospace; font-size:16px; }
+      .bg{fill:#070b0a}
+      .fg{fill:#b8bbbc}.dim{fill:#5b5f61}
+      .green{fill:#26ff7a}.g2{fill:#0fb85a}
+      .ok{fill:#28c840}.warn{fill:#febc2e}.bad{fill:#ff5f57}
+      .pink{fill:#fb6e88}.cyan{fill:#6bdcff}
+
+      @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+      .cursor { animation: blink 1s step-end infinite; }
+
+      /* Timeline: 0..48 typing, then print+scroll */
+      @keyframes typeNET { 0%{width:0px} 48%{width:560px} 100%{width:560px} }
+      .cmdReveal { animation: typeNET 8.6s steps(34,end) infinite; }
+
+      @keyframes cursorNET { 0%{transform:translateX(0px)} 47%{transform:translateX(560px)} 100%{transform:translateX(560px)} }
+      .cmdCursor { animation: cursorNET 8.6s steps(1,end) infinite; }
+
+      @keyframes revealNET { 0%{height:0px} 48%{height:0px} 78%{height:336px} 88%{height:336px} 100%{height:0px} }
+      .revealRect { animation: revealNET 8.6s steps(14,end) infinite; }
+
+      @keyframes scrollNET {
+      0%,48% { transform: translateY(0px); opacity: 1; }
+      78% { transform: translateY(0px); opacity: 1; }
+      80% { transform: translateY(-24px); }
+      81.5% { transform: translateY(-48px); }
+      83% { transform: translateY(-72px); }
+      84.5% { transform: translateY(-96px); }
+      86% { transform: translateY(-120px); }
+      87.5% { transform: translateY(-144px); }
+      89% { transform: translateY(-168px); }
+      90.5% { transform: translateY(-192px); }
+      92% { transform: translateY(-216px); }
+      93.5% { transform: translateY(-240px); }
+      96% { opacity: 1; }
+      97% { opacity: 0; }
+      100%{ transform: translateY(0px); opacity: 1; }
+      }
+      .printCycle { animation: scrollNET 8.6s steps(1,end) infinite; }
+
+      /* mini sparkline frames */
+      .sp{opacity:0}
+      @keyframes s0 { 0%,24.9%{opacity:1}25%,100%{opacity:0} }
+      @keyframes s1 { 0%,24.9%{opacity:0}25%,49.9%{opacity:1}50%,100%{opacity:0} }
+      @keyframes s2 { 0%,49.9%{opacity:0}50%,74.9%{opacity:1}75%,100%{opacity:0} }
+      @keyframes s3 { 0%,74.9%{opacity:0}75%,100%{opacity:1} }
+      .s0{animation:s0 1.6s steps(1,end) infinite}
+      .s1{animation:s1 1.6s steps(1,end) infinite}
+      .s2{animation:s2 1.6s steps(1,end) infinite}
+      .s3{animation:s3 1.6s steps(1,end) infinite}
+    </style>
+
+    <filter id="shadow"><feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="rgba(0,0,0,.45)"/></filter>
+
+    <clipPath id="viewport_net"><rect x="56" y="56" width="988" height="412"/></clipPath>
+    <clipPath id="out_net"><rect x="56" y="72" width="988" height="360"/></clipPath>
+
+    <mask id="mask_net" maskUnits="userSpaceOnUse">
+      <rect x="56" y="72" width="988" height="0" fill="white" class="revealRect"/>
+    </mask>
+
+    <mask id="cmdmask_net" maskUnits="userSpaceOnUse">
+      <rect x="128" y="456" width="0" height="22" fill="white" class="cmdReveal"/>
+    </mask>
+  </defs>
+
+  <!-- terminal -->
+  <rect x="32" y="32" width="1036" height="456" rx="12" class="bg" filter="url(#shadow)"/>
+  <rect x="40" y="40" width="1020" height="440" rx="10" fill="none" stroke="#26ff7a" stroke-width="3"/>
+  <rect x="48" y="48" width="1004" height="424" rx="8" fill="none" stroke="#0fb85a" stroke-width="2" opacity="0.9"/>
+
+  <g clip-path="url(#viewport_net)">
+    <!-- OUTPUT -->
+    <g clip-path="url(#out_net)">
+      <g mask="url(#mask_net)" class="printCycle js-loop">
+        <text x="56" y="96" class="dim">FABRIC MAP / SILO prod</text>
+
+        <text x="56" y="120" class="fg">discovery: sidecar(a,b)  underlay(ddm)  overlay(opte)  edge(uplinks)</text>
+        <text x="56" y="144" class="fg">┌──────────────────────────────────────────────────────────────────────┐</text>
+        <text x="56" y="168" class="fg">│                      </text><text x="280" y="168" class="cyan">[EDGE]</text><text x="340" y="168" class="fg"> 2×100G uplinks                      │</text>
+        <text x="56" y="192" class="fg">│                        │  ebgp </text><text x="430" y="192" class="ok">established</text><text x="542" y="192" class="fg">                         │</text>
+        <text x="56" y="216" class="fg">│                        │                                      │</text>
+        <text x="56" y="240" class="fg">│              ┌─────────┴─────────┐                  ┌────────┴───────┐</text>
+        <text x="56" y="264" class="fg">│              │ </text><text x="152" y="264" class="cyan">SIDE CAR A</text><text x="252" y="264" class="fg">      │                  │ </text><text x="650" y="264" class="cyan">SIDE CAR B</text><text x="750" y="264" class="fg">      │</text>
+        <text x="56" y="288" class="fg">│              │  fabric ports: 64 │                  │  fabric ports: 64 │</text>
+        <text x="56" y="312" class="fg">│              │  drops: </text><text x="210" y="312" class="ok">0</text><text x="228" y="312" class="fg">  p95: 2.1ms   │                  │  drops: </text><text x="730" y="312" class="ok">0</text><text x="748" y="312" class="fg">  p95: 2.0ms   │</text>
+        <text x="56" y="336" class="fg">│              └─────────┬─────────┘                  └────────┬───────┘</text>
+        <text x="56" y="360" class="fg">│                        │ 100G×64 mesh                          │</text>
+        <text x="56" y="384" class="fg">│              ┌─────────┴─────────┐                  ┌────────┴───────┐</text>
+        <text x="56" y="408" class="fg">│              │ </text><text x="152" y="408" class="cyan">UNDERLAY (DDM)</text><text x="298" y="408" class="fg">   │                  │ </text><text x="650" y="408" class="cyan">OVERLAY (OPTE)</text><text x="796" y="408" class="fg">  │</text>
+        <text x="56" y="432" class="fg">│              │ routes: 128  mp: </text><text x="330" y="432" class="ok">stable</text><text x="400" y="432" class="fg">     │                  │ tunnels: 12  fw: 86  │</text>
+        <text x="56" y="456" class="fg">└──────────────────────────────────────────────────────────────────────┘</text>
+
+        <text x="56" y="480" class="dim">p95 latency </text>
+        <text x="170" y="480" class="sp s0 fg"> ▁▂▂▃▄▅▅▆▇▆▆▅▄▃▂▁</text>
+        <text x="170" y="480" class="sp s1 fg"> ▂▂▃▄▅▆▇▆▆▅▄▃▂▁▁▂</text>
+        <text x="170" y="480" class="sp s2 fg"> ▁▁▂▃▄▆▇▇▆▄▃▂▁▁▂▃</text>
+        <text x="170" y="480" class="sp s3 fg"> ▁▂▃▄▅▆▆▇▆▅▄▃▂▂▁▁</text>
+        <text x="440" y="480" class="dim"> now </text><text x="488" y="480" class="fg">2.1ms</text>
+      </g>
+    </g>
+
+    <!-- PROMPT (bottom) -->
+    <text x="56" y="460" class="green">oxide%</text>
+    <text x="128" y="460" class="dim"> net map --silo=prod --watch</text>
+    <g mask="url(#cmdmask_net)">
+      <text x="128" y="460" class="fg"> net map --silo=prod --watch</text>
+    </g>
+    <g class="cmdCursor">
+      <text x="128" y="460" class="green cursor">█</text>
+    </g>
+  </g>
+</svg>
